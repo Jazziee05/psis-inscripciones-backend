@@ -9,7 +9,7 @@ from rest_framework import generics, permissions
 from rest_framework import viewsets, filters, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from drf_spectacular.utils import extend_schema, OpenApiResponse
 
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -54,6 +54,7 @@ def _unique_username(base: str) -> str:
         i += 1
 @extend_schema(tags=["Students"])
 class StudentViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
     queryset = Student.objects.all() # pylint: disable=no-member
     serializer_class = StudentSerializer
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
@@ -109,6 +110,7 @@ class StudentViewSet(viewsets.ModelViewSet):
 
 @extend_schema(tags=["Courses"])    
 class CourseViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
     queryset = Course.objects.all() # pylint: disable=no-member
     serializer_class = CourseSerializer
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
@@ -168,6 +170,7 @@ class CourseViewSet(viewsets.ModelViewSet):
     
 @extend_schema(tags=["Enrollments"])
 class EnrollmentViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
     queryset= Enrollment.objects.select_related("student", "course").all() # pylint: disable=no-member
     serializer_class = EnrollmentSerializer
     #aca solo sobreescribimos la funcion create
@@ -327,4 +330,3 @@ class RegisterView(generics.CreateAPIView):
     permission_classes = [AllowAny]
     queryset = User.objects.all()
     serializer_class = PublicRegisterSerializer
-    permission_classes = [permissions.AllowAny]
