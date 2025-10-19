@@ -18,7 +18,7 @@ environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 
 #Aca empezaremos a utilizar env para asignar las variables definidas en el .env
 DEBUG = env("DJANGO_DEBUG")
-ALLOWED_HOSTS = ["*"] #esto es solo para ambiente local
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", ".onrender.com"] #esto es solo para ambiente local
 
 if os.getenv("DATABASE_URL"):
     # Render / Producción
