@@ -67,7 +67,7 @@ class StudentViewSet(viewsets.ModelViewSet):
         data = [{"course_id": e.course.id, "code": e.course.code, 
                  "title": e.course.title, "enrolled_at": e.enrolled_at} for e in enrolls]
         return Response(data)
-    @action(detail=True, methods=["get"], url_path="report-pdf")
+    @action(detail=True, methods=["get"], url_path="report-pdf",permission_classes =[AllowAny])
     def report_pdf(self, request, pk=None):
         # Busca el alumno por el id dado en la url
         try:
@@ -98,7 +98,7 @@ class StudentViewSet(viewsets.ModelViewSet):
             ctx,
             f"alumno_{student.last_name}_{student.first_name}_cursos.pdf",
         )
-    @action(detail=False, methods=["get"], url_path="report-all")
+    @action(detail=False, methods=["get"], url_path="report-all",permission_classes =[AllowAny])
     def report_all_students(self, request):
         students = Student.objects.order_by("last_name", "first_name") # pylint: disable=no-member
         ctx = {
@@ -125,7 +125,7 @@ class CourseViewSet(viewsets.ModelViewSet):
                  "id_number": e.student.id_number, "enrolled_at": e.enrolled_at} for e in enrolls]
         return Response(data)
     
-    @action(detail=True, methods=["get"], url_path="report-pdf")
+    @action(detail=True, methods=["get"], url_path="report-pdf", permission_classes =[AllowAny])
     def report_pdf(self, request, pk=None):
         #lo mismo busca por id de cursony si encuentra lo guarda en course
         try:
@@ -226,7 +226,7 @@ class EnrollmentViewSet(viewsets.ModelViewSet):
         )
         return Response(EnrollmentSerializer(qs, many=True).data)
      # --- Reporte de matriculaciones por alumno ---
-    @action(detail=False, methods=["get"], url_path=r"report-student/(?P<student_id>\d+)")
+    @action(detail=False, methods=["get"], url_path=r"report-student/(?P<student_id>\d+)",permission_classes =[AllowAny])
     def report_student(self, request, student_id=None):
         enrolls = (
             Enrollment.objects  # pylint: disable=no-member
@@ -247,7 +247,7 @@ class EnrollmentViewSet(viewsets.ModelViewSet):
                            f"matriculas_{student.last_name}_{student.first_name}.pdf")
 
     # --- Reporte de matriculaciones por curso ---
-    @action(detail=False, methods=["get"], url_path=r"report-course/(?P<course_id>\d+)")
+    @action(detail=False, methods=["get"], url_path=r"report-course/(?P<course_id>\d+)",permission_classes =[AllowAny])
     def report_course(self, request, course_id=None):
         enrolls = (
             Enrollment.objects # pylint: disable=no-member
@@ -268,7 +268,7 @@ class EnrollmentViewSet(viewsets.ModelViewSet):
                            f"alumnos_{course.code}.pdf")
 
     # --- Reporte general de matriculaciones ---
-    @action(detail=False, methods=["get"], url_path="report-all-enrollments")
+    @action(detail=False, methods=["get"], url_path="report-all-enrollments",permission_classes =[AllowAny])
     def report_all_enrollments(self, request):
         ranking = (
             Course.objects  # pylint: disable=no-member
